@@ -324,6 +324,17 @@ internal fun HomeScreen(
         todayRecordedSelectionIds = currentTodayRecordedIds
     }
 
+    fun cancelWearSelectionMode() {
+        isWearSelectionMode = false
+        selectedClothingIds = emptySet()
+        todayRecordedSelectionIds = emptySet()
+        batchDuplicateIds = null
+    }
+
+    BackHandler(enabled = isWearSelectionMode) {
+        cancelWearSelectionMode()
+    }
+
     fun clearWearReaction(ids: Set<Long>, operationId: String? = null) {
         successFeedbackOperationsById = successFeedbackOperationsById.filterNot { (id, feedbackOperationId) ->
             id in ids && (operationId == null || feedbackOperationId == operationId)
@@ -543,6 +554,19 @@ internal fun HomeScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    if (isWearSelectionMode) {
+                        IconButton(
+                            onClick = ::cancelWearSelectionMode,
+                            modifier = Modifier.testTag(WearCostTestTags.SelectionBack)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrow_back_24),
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
+                    }
+                },
                 title = {
                     Text(
                         text = stringResource(R.string.app_name),
@@ -555,8 +579,10 @@ internal fun HomeScreen(
                     titleContentColor = MaterialTheme.colorScheme.onBackground
                 ),
                 actions = {
-                    TextButton(onClick = onSettings) {
-                        Text(stringResource(R.string.settings))
+                    if (!isWearSelectionMode) {
+                        TextButton(onClick = onSettings) {
+                            Text(stringResource(R.string.settings))
+                        }
                     }
                 }
             )
@@ -595,12 +621,7 @@ internal fun HomeScreen(
                     WearSelectionHeader(
                         selectedCount = todayOutfitSelectedCount(selectedClothingIds),
                         isEditingExistingTodayOutfit = todayRecordedSelectionIds.isNotEmpty(),
-                        onCancel = {
-                            isWearSelectionMode = false
-                            selectedClothingIds = emptySet()
-                            todayRecordedSelectionIds = emptySet()
-                            batchDuplicateIds = null
-                        }
+                        onCancel = ::cancelWearSelectionMode
                     )
                 } else {
                     TodayRecordCard(

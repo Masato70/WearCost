@@ -37,6 +37,31 @@ class HomeScreenBatchSelectionTest {
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
+    fun selectionMode_topBackReturnsToHome() {
+        setHomeContent(items = testItems())
+
+        composeRule.onNodeWithTag(WearCostTestTags.StartBatchRecord).performClick()
+        composeRule.onNodeWithTag(WearCostTestTags.SelectionBack).assertIsDisplayed().performClick()
+
+        composeRule.onAllNodesWithTag(WearCostTestTags.SelectionHeader).assertCountEquals(0)
+        composeRule.onNodeWithTag(WearCostTestTags.AddClothingFab).assertIsDisplayed()
+    }
+
+    @Test
+    fun selectionMode_systemBackReturnsToHomeWithoutClosingActivity() {
+        setHomeContent(items = testItems())
+
+        composeRule.onNodeWithTag(WearCostTestTags.StartBatchRecord).performClick()
+        composeRule.runOnUiThread {
+            composeRule.activity.onBackPressedDispatcher.onBackPressed()
+        }
+
+        composeRule.onAllNodesWithTag(WearCostTestTags.SelectionHeader).assertCountEquals(0)
+        composeRule.onNodeWithTag(WearCostTestTags.AddClothingFab).assertIsDisplayed()
+        assertEquals(false, composeRule.activity.isFinishing)
+    }
+
+    @Test
     fun selectionMode_selectsAndClearsItems() {
         setHomeContent(items = testItems())
 

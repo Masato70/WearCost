@@ -4,6 +4,7 @@ object WearCostTestTags {
     const val StartBatchRecord = "start-batch-record"
     const val SelectionHeader = "selection-header"
     const val SelectionCancel = "selection-cancel"
+    const val SelectionBack = "selection-back"
     const val BatchRecordButton = "batch-record-button"
     const val AddClothingFab = "add-clothing-fab"
     const val HomeList = "home-list"

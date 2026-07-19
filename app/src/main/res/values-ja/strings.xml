@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">服のコスパ帳</string>
     <string name="add_short">+</string>
-    <string name="summary_title">クローゼット集計</string>
     <string name="closet_title">クローゼット</string>
     <string name="settings">設定</string>
     <string name="currency">通貨</string>
@@ -13,7 +12,6 @@
     <string name="currency_krw">韓国ウォン（KRW）</string>
     <string name="currency_cny">中国元（CNY）</string>
     <string name="all_categories">すべて</string>
-    <string name="sort_label">並び替え：%1$s ▼</string>
     <string name="sort_chip_format">⇅ %1$s</string>
     <string name="sort_accessibility">並び替え</string>
     <string name="sort_recently_worn">最近着た順</string>
@@ -26,23 +24,11 @@
     <string name="sort_purchase_price_low">購入価格が安い順</string>
     <string name="sort_newest_created">登録が新しい順</string>
     <string name="sort_oldest_created">登録が古い順</string>
-    <string name="sort_before_active">まだ活躍前</string>
-    <string name="sort_cost_improvement">コスパ改善順</string>
-    <string name="item_count_format">%1$d点</string>
-    <string name="unworn_value">まだ活躍前</string>
-    <string name="before_active">まだ活躍前</string>
-    <string name="before_active_count_format">%1$d点</string>
-    <string name="before_active_summary_format">%1$d点・%2$s</string>
-    <string name="total_value">総額</string>
-    <string name="avg_cost">平均/回</string>
     <string name="registered_count">登録数</string>
-    <string name="overall_cost_per_wear">全体コスト／着用</string>
     <string name="unworn_count">未着用</string>
     <string name="closet_item_count_format">%1$d着</string>
     <string name="unworn_purchase_value_format">%1$s分</string>
-    <string name="total_purchase_value_format">購入総額 %1$s</string>
     <string name="purchase_total">購入総額</string>
-    <string name="no_value">—</string>
     <string name="empty_title">まだアイテムがありません</string>
     <string name="empty_message">よく着る1着から記録を始めましょう。</string>
     <string name="add_item">アイテム追加</string>
@@ -72,7 +58,6 @@
     <string name="price_unit_format">単位：%1$s</string>
     <string name="initial_wear_count">着用回数</string>
     <string name="purchase_date">購入日</string>
-    <string name="date_placeholder">yyyy-mm-dd</string>
     <string name="select_date">日付を選択</string>
     <string name="optional_details">任意項目</string>
     <string name="show_optional_details">任意項目を入力</string>
@@ -84,8 +69,6 @@
     <string name="clear">クリア</string>
     <string name="delete_item_title">削除しますか？</string>
     <string name="delete_item_message">このアイテムをWearCostから削除します。</string>
-    <string name="increment">+1</string>
-    <string name="wore_increment">着た +1</string>
     <string name="today_wore">今日着た</string>
     <string name="recorded_with_check">✓ 今日記録済み</string>
     <string name="wear_added">着用を記録しました</string>
@@ -93,19 +76,14 @@
     <string name="duplicate_wear_title">今日はすでに記録されています</string>
     <string name="duplicate_wear_message">同じ服をもう1回記録しますか？</string>
     <string name="record_again">もう1回記録</string>
-    <string name="wear_count_format">%1$d回 着用</string>
     <string name="wear_count_and_purchase_format">%1$d回着用｜購入 %2$s</string>
     <string name="cost_per_wear_format">%1$s / 回</string>
     <string name="cost_per_wear_label">1回あたり</string>
     <string name="cost_per_wear_unknown">—</string>
     <string name="cost_calculated_after_wear">着用後に計算されます</string>
     <string name="cost_formula_format">%1$s ÷ %2$d回</string>
-    <string name="purchase_price_format">購入 %1$s</string>
-    <string name="not_worn_yet">未着用</string>
     <string name="not_worn_yet_subtitle">まだ着ていません</string>
-    <string name="waiting_turn">出番待ち</string>
     <string name="first_wear_cost_format">今日着ると1回あたり %1$s</string>
-    <string name="last_worn_inline_format">最後に着た日：%1$s</string>
     <string name="category_and_last_worn_format">%1$s ・ %2$s着用</string>
     <string name="category_and_status_format">%1$s ・ %2$s</string>
     <string name="last_worn_today">今日</string>
@@ -121,7 +99,6 @@
     <string name="today_record_exists">今日の記録があります</string>
     <string name="today_recorded_count_format">今日は%1$d点記録済み</string>
     <string name="today_record_add_hint">必要なら追加で記録できます</string>
-    <string name="add_more_today_record">追加する</string>
     <string name="edit_today_record">編集する</string>
     <string name="start_today_outfit_record">今日のコーデを記録</string>
     <string name="selection_mode_title">今日着た服を選択</string>
@@ -129,17 +106,10 @@
     <string name="selection_mode_edit_subtitle">追加・取り消しができます</string>
     <string name="selected_count_format">%1$d点選択中</string>
     <string name="today_outfit_count_format">今日のコーデ %1$d着</string>
-    <string name="select_clothes_prompt">服を選択してください</string>
-    <string name="select_additional_clothes_prompt">追加する服を選択してください</string>
-    <string name="record_selected_count_format">%1$d点を記録</string>
-    <string name="record_added_count_format">追加した%1$d着を記録</string>
-    <string name="today_outfit_and_added_count_format">今日のコーデ %1$d着・新しく追加 %2$d着</string>
     <string name="recording">記録中</string>
-    <string name="selected">選択中</string>
     <string name="already_recorded_label">記録済み</string>
     <string name="add_pending_label">追加予定</string>
     <string name="remove_pending_label">取り消し予定</string>
-    <string name="tap_to_select">カードをタップして選択</string>
     <string name="today_outfit_no_changes">変更はありません</string>
     <string name="today_outfit_add_summary_format">%1$d着追加します</string>
     <string name="today_outfit_remove_summary_format">%1$d着取り消します</string>
@@ -178,4 +148,22 @@
     <string name="category_bag_short">鞄</string>
     <string name="category_accessory_short">小</string>
     <string name="category_other_short">他</string>
+    <string name="nav_closet">クローゼット</string>
+    <string name="nav_history">着用履歴</string>
+    <string name="wear_history_title">着用履歴</string>
+    <string name="wear_history_empty_title">着用履歴はまだありません</string>
+    <string name="wear_history_empty_message">今日のコーデを記録すると、日付ごとにここへ表示されます。</string>
+    <string name="history_item_count_format">%1$d着</string>
+    <string name="history_today">今日</string>
+    <string name="history_yesterday">昨日</string>
+    <string name="delete_history_entry_title">この着用記録を削除しますか？</string>
+    <string name="delete_history_entry_message">%2$sに記録した「%1$s」を削除します。着用回数も記録数分だけ減ります。</string>
+    <string name="purge_deleted_clothes_history">削除済みのアイテムの着用履歴を消去</string>
+    <string name="purge_deleted_clothes_history_summary">クローゼットから削除したアイテムに関する着用履歴のみ、完全に削除されます。</string>
+    <string name="purge_deleted_clothes_history_title">削除済みのアイテムの着用履歴を消去しますか？</string>
+    <string name="purge_deleted_clothes_history_message">削除済みのアイテムに関する着用履歴は元に戻せません。現在クローゼットにあるアイテムには影響しません。</string>
+    <string name="purge_deleted_clothes_history_empty">消去できる着用履歴はありませんでした</string>
+    <plurals name="purge_deleted_clothes_history_completed">
+        <item quantity="other">着用履歴を%1$d件消去しました</item>
+    </plurals>
 </resources>

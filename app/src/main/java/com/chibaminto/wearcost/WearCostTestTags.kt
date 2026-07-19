@@ -8,6 +8,9 @@ object WearCostTestTags {
     const val BatchRecordButton = "batch-record-button"
     const val AddClothingFab = "add-clothing-fab"
     const val HomeList = "home-list"
+    const val HomeTab = "home-tab"
+    const val HistoryTab = "history-tab"
+    const val HistoryList = "history-list"
 
     fun clothingCard(id: Long): String = "clothing-card-$id"
     fun todayWoreButton(id: Long): String = "today-wore-button-$id"

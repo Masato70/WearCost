@@ -16,6 +16,7 @@ data class ClothingEntity(
     val customCategoryName: String? = null,
     val lastWornDateEpochDay: Long? = null,
     val lastWearRecordedAtMillis: Long? = null,
+    val isArchived: Boolean = false,
     val createdAtMillis: Long = System.currentTimeMillis(),
     val updatedAtMillis: Long = System.currentTimeMillis()
 ) {

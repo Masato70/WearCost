@@ -11,8 +11,19 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ClothingDao {
-    @Query("SELECT * FROM clothing_items ORDER BY updatedAtMillis DESC")
+    @Query("SELECT * FROM clothing_items WHERE isArchived = 0 ORDER BY updatedAtMillis DESC")
     fun observeItems(): Flow<List<ClothingEntity>>
+
+    @Query(
+        """
+        SELECT wr.wornDateEpochDay AS historyWornDateEpochDay, ci.*
+        FROM wear_records AS wr
+        INNER JOIN clothing_items AS ci ON ci.id = wr.clothingId
+        GROUP BY wr.wornDateEpochDay, wr.clothingId
+        ORDER BY wr.wornDateEpochDay DESC, MAX(wr.recordedAtMillis) DESC
+        """
+    )
+    fun observeWearHistory(): Flow<List<WearHistoryEntry>>
 
     @Query("SELECT * FROM clothing_items WHERE id = :id")
     suspend fun getItemById(id: Long): ClothingEntity?
@@ -32,6 +43,25 @@ interface ClothingDao {
     @Delete
     suspend fun delete(item: ClothingEntity)
 
+    @Query("UPDATE clothing_items SET isArchived = 1, updatedAtMillis = :updatedAtMillis WHERE id = :id")
+    suspend fun archiveItem(
+        id: Long,
+        updatedAtMillis: Long = System.currentTimeMillis()
+    ): Int
+
+    @Query("SELECT COUNT(*) FROM wear_records WHERE clothingId IN (SELECT id FROM clothing_items WHERE isArchived = 1)")
+    suspend fun countArchivedWearRecords(): Int
+
+    @Query("DELETE FROM clothing_items WHERE isArchived = 1")
+    suspend fun deleteArchivedItems(): Int
+
+    @Transaction
+    suspend fun purgeArchivedItems(): Int {
+        val deletedHistoryCount = countArchivedWearRecords()
+        deleteArchivedItems()
+        return deletedHistoryCount
+    }
+
     @Query(
         """
         UPDATE clothing_items
@@ -48,9 +78,6 @@ interface ClothingDao {
         recordedAtMillis: Long = System.currentTimeMillis()
     ): Int
 
-    @Query("UPDATE clothing_items SET wearCount = MAX(wearCount - 1, 0), updatedAtMillis = :updatedAtMillis WHERE id = :id")
-    suspend fun decrementWearCount(id: Long, updatedAtMillis: Long = System.currentTimeMillis())
-
     @Query("SELECT * FROM wear_records WHERE clothingId = :clothingId AND wornDateEpochDay = :wornDateEpochDay ORDER BY recordedAtMillis DESC")
     suspend fun getWearRecordsForDate(clothingId: Long, wornDateEpochDay: Long): List<WearRecordEntity>
 
@@ -62,6 +89,24 @@ interface ClothingDao {
 
     @Query("DELETE FROM wear_records WHERE operationId = :operationId")
     suspend fun deleteWearRecordsForOperation(operationId: String): Int
+
+    @Transaction
+    suspend fun deleteWearHistoryEntry(clothingId: Long, wornDateEpochDay: Long): Boolean {
+        val item = getItemById(clothingId) ?: return false
+        val records = getWearRecordsForDate(clothingId, wornDateEpochDay)
+        if (records.isEmpty()) return false
+
+        val deletedCount = deleteWearRecordsForDate(clothingId, wornDateEpochDay)
+        val latest = getLatestWearRecord(clothingId)
+        updateWearColumns(
+            id = clothingId,
+            wearCount = (item.wearCount - deletedCount).coerceAtLeast(0),
+            lastWornDateEpochDay = latest?.wornDateEpochDay,
+            lastWearRecordedAtMillis = latest?.recordedAtMillis,
+            updatedAtMillis = System.currentTimeMillis()
+        )
+        return true
+    }
 
     @Query(
         """

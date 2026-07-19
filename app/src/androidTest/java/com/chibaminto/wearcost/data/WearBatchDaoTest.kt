@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.first
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -167,6 +168,52 @@ class WearBatchDaoTest {
         assertEquals(0, dao.getItemById(2)?.wearCount)
         assertEquals(20_000L, dao.getItemById(1)?.lastWornDateEpochDay)
         assertNull(dao.getItemById(2)?.lastWornDateEpochDay)
+    }
+
+    @Test
+    fun archiveItem_hidesFromClosetButKeepsWearHistory() = runBlocking {
+        insertItems(1)
+        dao.recordWearWithHistory(id = 1, wornDateEpochDay = 20_000, operationId = "wear")
+
+        dao.archiveItem(1)
+
+        assertEquals(emptyList<ClothingEntity>(), dao.observeItems().first())
+        val history = dao.observeWearHistory().first()
+        assertEquals(1, history.size)
+        assertEquals(1L, history.single().clothing.id)
+        assertEquals(20_000L, history.single().wornDateEpochDay)
+    }
+
+    @Test
+    fun deleteWearHistoryEntry_removesDateAndRecalculatesWearState() = runBlocking {
+        insertItems(1)
+        dao.recordWearWithHistory(id = 1, wornDateEpochDay = 19_999, operationId = "old")
+        dao.recordWearWithHistory(id = 1, wornDateEpochDay = 20_000, operationId = "today-1")
+        dao.recordWearWithHistory(id = 1, wornDateEpochDay = 20_000, operationId = "today-2")
+
+        dao.deleteWearHistoryEntry(clothingId = 1, wornDateEpochDay = 20_000)
+
+        val item = requireNotNull(dao.getItemById(1))
+        assertEquals(1, item.wearCount)
+        assertEquals(19_999L, item.lastWornDateEpochDay)
+        val history = dao.observeWearHistory().first()
+        assertEquals(listOf(19_999L), history.map { it.wornDateEpochDay })
+    }
+
+    @Test
+    fun purgeArchivedItems_removesOnlyDeletedClothesAndTheirHistory() = runBlocking {
+        insertItems(1, 2)
+        dao.recordWearWithHistory(id = 1, wornDateEpochDay = 20_000, operationId = "archived")
+        dao.recordWearWithHistory(id = 2, wornDateEpochDay = 20_000, operationId = "active")
+        dao.archiveItem(1)
+
+        val deletedHistoryCount = dao.purgeArchivedItems()
+
+        assertEquals(1, deletedHistoryCount)
+        assertNull(dao.getItemById(1))
+        assertEquals(2L, dao.getItemById(2)?.id)
+        val history = dao.observeWearHistory().first()
+        assertEquals(listOf(2L), history.map { it.clothing.id })
     }
 
     private suspend fun insertItems(vararg ids: Long) {

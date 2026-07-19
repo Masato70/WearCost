@@ -10,7 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [ClothingEntity::class, CustomCategoryEntity::class, WearRecordEntity::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(ClothingConverters::class)
@@ -28,7 +28,7 @@ abstract class WearCostDatabase : RoomDatabase() {
                     WearCostDatabase::class.java,
                     "wearcost.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .build()
                     .also { instance = it }
             }
@@ -90,6 +90,14 @@ abstract class WearCostDatabase : RoomDatabase() {
                     FROM clothing_items
                     WHERE wearCount > 0 AND lastWornDateEpochDay IS NOT NULL
                     """.trimIndent()
+                )
+            }
+        }
+
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE clothing_items ADD COLUMN isArchived INTEGER NOT NULL DEFAULT 0"
                 )
             }
         }

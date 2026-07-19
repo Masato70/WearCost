@@ -62,7 +62,11 @@ class WearCostDatabaseMigrationTest {
             WearCostDatabase::class.java,
             databaseName
         )
-            .addMigrations(WearCostDatabase.MIGRATION_2_3, WearCostDatabase.MIGRATION_3_4)
+            .addMigrations(
+                WearCostDatabase.MIGRATION_2_3,
+                WearCostDatabase.MIGRATION_3_4,
+                WearCostDatabase.MIGRATION_4_5
+            )
             .build()
 
         kotlinx.coroutines.runBlocking {
@@ -132,7 +136,7 @@ class WearCostDatabaseMigrationTest {
             WearCostDatabase::class.java,
             databaseName
         )
-            .addMigrations(WearCostDatabase.MIGRATION_3_4)
+            .addMigrations(WearCostDatabase.MIGRATION_3_4, WearCostDatabase.MIGRATION_4_5)
             .build()
 
         kotlinx.coroutines.runBlocking {

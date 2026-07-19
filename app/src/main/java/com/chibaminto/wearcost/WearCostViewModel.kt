@@ -12,6 +12,7 @@ import com.chibaminto.wearcost.data.BatchWearRecordResult
 import com.chibaminto.wearcost.data.TodayOutfitEditResult
 import com.chibaminto.wearcost.data.TodayOutfitEditResultState
 import com.chibaminto.wearcost.data.WearRecordSnapshot
+import com.chibaminto.wearcost.data.WearHistoryEntry
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -30,6 +31,7 @@ data class WearCostUiState(
     val items: List<ClothingEntity> = emptyList(),
     val summary: WearCostSummary = WearCostSummary(),
     val categoryOptions: List<CategoryOption> = fixedCategoryOptions(),
+    val wearHistory: List<WearHistoryEntry> = emptyList(),
     val currencyCode: String = "USD"
 )
 
@@ -43,8 +45,9 @@ class WearCostViewModel(
     val uiState: StateFlow<WearCostUiState> = combine(
         repository.items,
         repository.customCategories,
+        repository.wearHistory,
         currencySettingsRepository.currencyCode
-    ) { items, customCategories, currencyCode ->
+    ) { items, customCategories, wearHistory, currencyCode ->
             val options = fixedCategoryOptions() + customCategories.map {
                 CategoryOption(customCategory = it)
             }
@@ -52,6 +55,7 @@ class WearCostViewModel(
                 items = items,
                 summary = closetSummary(items),
                 categoryOptions = options,
+                wearHistory = wearHistory,
                 currencyCode = currencyCode
             )
         }
@@ -70,6 +74,18 @@ class WearCostViewModel(
     fun delete(item: ClothingEntity) {
         viewModelScope.launch {
             repository.delete(item)
+        }
+    }
+
+    fun deleteWearHistoryEntry(clothingId: Long, wornDateEpochDay: Long) {
+        viewModelScope.launch {
+            repository.deleteWearHistoryEntry(clothingId, wornDateEpochDay)
+        }
+    }
+
+    fun purgeArchivedItems(onPurged: (Int) -> Unit) {
+        viewModelScope.launch {
+            onPurged(repository.purgeArchivedItems())
         }
     }
 

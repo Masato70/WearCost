@@ -131,8 +131,10 @@ import com.chibaminto.wearcost.data.SupportedCurrencyCodes
 import com.chibaminto.wearcost.data.TodayOutfitEditResult
 import com.chibaminto.wearcost.data.TodayOutfitEditResultState
 import com.chibaminto.wearcost.data.WearRecordSnapshot
+import com.chibaminto.wearcost.data.WearHistoryEntry
 import com.chibaminto.wearcost.data.WearCostChange
 import com.chibaminto.wearcost.data.costPerWear
+import com.chibaminto.wearcost.data.displayMillisFromEpochDay
 import com.chibaminto.wearcost.data.hasWearRecordedOn
 import com.chibaminto.wearcost.data.lastWornEpochDay
 import com.chibaminto.wearcost.data.relativeLastWornText
@@ -155,9 +157,11 @@ import java.text.SimpleDateFormat
 import java.util.Currency
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 private enum class Screen {
     HOME,
+    HISTORY,
     SETTINGS,
     EDIT
 }
@@ -196,6 +200,7 @@ fun WearCostApp(viewModel: WearCostViewModel) {
             updatingWearItemIds = updatingWearItemIds,
             onCategorySelected = { selectedCategoryKey = it },
             onSettings = { screen = Screen.SETTINGS },
+            onHistory = { screen = Screen.HISTORY },
             onAdd = {
                 editingItemId = null
                 screen = Screen.EDIT
@@ -212,9 +217,16 @@ fun WearCostApp(viewModel: WearCostViewModel) {
             onUndoTodayOutfitEdit = viewModel::restoreTodayOutfitEdit
         )
 
+        Screen.HISTORY -> WearHistoryScreen(
+            history = uiState.wearHistory,
+            onDeleteEntry = viewModel::deleteWearHistoryEntry,
+            onHome = { screen = Screen.HOME }
+        )
+
         Screen.SETTINGS -> SettingsScreen(
             currencyCode = uiState.currencyCode,
             onCurrencySelected = viewModel::setCurrencyCode,
+            onPurgeArchivedItems = viewModel::purgeArchivedItems,
             onBack = { screen = Screen.HOME }
         )
 
@@ -248,6 +260,7 @@ internal fun HomeScreen(
     updatingWearItemIds: Set<Long>,
     onCategorySelected: (String?) -> Unit,
     onSettings: () -> Unit,
+    onHistory: () -> Unit = {},
     onAdd: () -> Unit,
     onEdit: (ClothingEntity) -> Unit,
     onRecordWear: (Long, Long, (WearRecordSnapshot?) -> Unit) -> Unit,
@@ -599,6 +612,12 @@ internal fun HomeScreen(
                     removedCount = editDiff.removedIds.size,
                     isRecording = isBatchRecording,
                     onRecord = ::handleTodayOutfitEditSubmit
+                )
+            } else {
+                MainBottomBar(
+                    historySelected = false,
+                    onHome = {},
+                    onHistory = onHistory
                 )
             }
         }
@@ -1169,14 +1188,287 @@ private fun ClosetSortMenu(
 }
 
 @Composable
-private fun AppBottomBar(onAdd: () -> Unit) {
-    val addClothingLabel = stringResource(R.string.add_clothing)
+private fun MainBottomBar(
+    historySelected: Boolean,
+    onHome: () -> Unit,
+    onHistory: () -> Unit
+) {
+    NavigationBar(
+        modifier = Modifier.fillMaxWidth(),
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 0.dp
+    ) {
+        MainBottomBarItem(
+            text = stringResource(R.string.nav_closet),
+            iconRes = R.drawable.ic_closet_24,
+            selected = !historySelected,
+            testTag = WearCostTestTags.HomeTab,
+            onClick = onHome
+        )
+        MainBottomBarItem(
+            text = stringResource(R.string.nav_history),
+            iconRes = R.drawable.ic_history_24,
+            selected = historySelected,
+            testTag = WearCostTestTags.HistoryTab,
+            onClick = onHistory
+        )
+    }
+}
 
-    BottomActionBar(
-        primaryText = addClothingLabel,
-        contentDescription = addClothingLabel,
-        onPrimaryClick = onAdd
-    )
+@Composable
+private fun RowScope.MainBottomBarItem(
+    text: String,
+    iconRes: Int,
+    selected: Boolean,
+    testTag: String,
+    onClick: () -> Unit
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = Modifier
+            .weight(1f)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .height(48.dp)
+            .testTag(testTag),
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = if (selected) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surface
+            },
+            contentColor = if (selected) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            }
+        )
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(22.dp)
+            )
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun WearHistoryScreen(
+    history: List<WearHistoryEntry>,
+    onDeleteEntry: (Long, Long) -> Unit,
+    onHome: () -> Unit
+) {
+    val groupedHistory = remember(history) { history.groupBy { it.wornDateEpochDay } }
+    var entryPendingDelete by remember { mutableStateOf<WearHistoryEntry?>(null) }
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.wear_history_title),
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
+                )
+            )
+        },
+        bottomBar = {
+            MainBottomBar(
+                historySelected = true,
+                onHome = onHome,
+                onHistory = {}
+            )
+        }
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .testTag(WearCostTestTags.HistoryList),
+            contentPadding = PaddingValues(horizontal = 18.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp)
+        ) {
+            if (groupedHistory.isEmpty()) {
+                item { WearHistoryEmptyState() }
+            } else {
+                groupedHistory.forEach { (epochDay, entries) ->
+                    item(key = "history-header-$epochDay") {
+                        WearHistoryDayHeader(epochDay = epochDay, itemCount = entries.size)
+                    }
+                    items(
+                        items = entries,
+                        key = { "history-$epochDay-${it.clothing.id}" }
+                    ) { entry ->
+                        WearHistoryItem(
+                            item = entry.clothing,
+                            onDelete = { entryPendingDelete = entry }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    entryPendingDelete?.let { entry ->
+        AlertDialog(
+            onDismissRequest = { entryPendingDelete = null },
+            title = { Text(stringResource(R.string.delete_history_entry_title)) },
+            text = {
+                Text(
+                    stringResource(
+                        R.string.delete_history_entry_message,
+                        clothingDisplayNameOrFallback(
+                            entry.clothing.name,
+                            stringResource(R.string.unnamed_item)
+                        ),
+                        formatHistoryDate(entry.wornDateEpochDay)
+                    )
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDeleteEntry(entry.clothing.id, entry.wornDateEpochDay)
+                        entryPendingDelete = null
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { entryPendingDelete = null }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun WearHistoryDayHeader(epochDay: Long, itemCount: Int) {
+    val today = todayEpochDay()
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Text(
+            text = when (epochDay) {
+                today -> stringResource(R.string.history_today)
+                today - 1 -> stringResource(R.string.history_yesterday)
+                else -> formatHistoryDate(epochDay)
+            },
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            text = if (epochDay == today || epochDay == today - 1) {
+                "${formatHistoryDate(epochDay)} · ${stringResource(R.string.history_item_count_format, itemCount)}"
+            } else {
+                stringResource(R.string.history_item_count_format, itemCount)
+            },
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun WearHistoryItem(item: ClothingEntity, onDelete: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
+    ) {
+        Row(
+            modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ItemImage(
+                imageUri = item.imageUri,
+                category = item.category,
+                modifier = Modifier.size(72.dp)
+            )
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = clothingDisplayNameOrFallback(
+                        name = item.name,
+                        fallback = stringResource(R.string.unnamed_item)
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = itemCategoryDisplayName(item),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            TextButton(onClick = onDelete) {
+                Text(
+                    text = stringResource(R.string.delete),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun WearHistoryEmptyState() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 22.dp, vertical = 64.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.wear_history_empty_title),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = stringResource(R.string.wear_history_empty_message),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+private fun formatHistoryDate(epochDay: Long): String {
+    val timeZone = TimeZone.getDefault()
+    return SimpleDateFormat("yyyy/MM/dd (E)", Locale.getDefault()).apply {
+        this.timeZone = timeZone
+    }.format(Date(displayMillisFromEpochDay(epochDay, timeZone)))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -1184,12 +1476,18 @@ private fun AppBottomBar(onAdd: () -> Unit) {
 private fun SettingsScreen(
     currencyCode: String,
     onCurrencySelected: (String) -> Unit,
+    onPurgeArchivedItems: ((Int) -> Unit) -> Unit,
     onBack: () -> Unit
 ) {
     var showCurrencyDialog by remember { mutableStateOf(false) }
+    var showPurgeArchivedDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.settings)) },
@@ -1247,6 +1545,33 @@ private fun SettingsScreen(
                     }
                 }
             }
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showPurgeArchivedDialog = true },
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.purge_deleted_clothes_history),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            text = stringResource(R.string.purge_deleted_clothes_history_summary),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -1281,6 +1606,43 @@ private fun SettingsScreen(
             confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { showCurrencyDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    if (showPurgeArchivedDialog) {
+        AlertDialog(
+            onDismissRequest = { showPurgeArchivedDialog = false },
+            title = { Text(stringResource(R.string.purge_deleted_clothes_history_title)) },
+            text = { Text(stringResource(R.string.purge_deleted_clothes_history_message)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showPurgeArchivedDialog = false
+                        onPurgeArchivedItems { deletedHistoryCount ->
+                            val message = if (deletedHistoryCount == 0) {
+                                context.getString(R.string.purge_deleted_clothes_history_empty)
+                            } else {
+                                context.resources.getQuantityString(
+                                    R.plurals.purge_deleted_clothes_history_completed,
+                                    deletedHistoryCount,
+                                    deletedHistoryCount
+                                )
+                            }
+                            scope.launch { snackbarHostState.showSnackbar(message) }
+                        }
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showPurgeArchivedDialog = false }) {
                     Text(stringResource(R.string.cancel))
                 }
             }
@@ -1602,6 +1964,12 @@ private fun ClothingCard(
         isRemovalPending -> stringResource(R.string.remove_pending_label)
         else -> null
     }
+    val cardContainerColor = when {
+        isAddedInEdit -> MaterialTheme.colorScheme.primaryContainer
+        isKeptRecorded -> MaterialTheme.colorScheme.surfaceContainer
+        isRemovalPending -> MaterialTheme.colorScheme.tertiaryContainer
+        else -> MaterialTheme.colorScheme.surface
+    }
 
     LaunchedEffect(recordedFeedback) {
         if (recordedFeedback) {
@@ -1652,13 +2020,7 @@ private fun ClothingCard(
             },
         shape = cardShape,
         colors = CardDefaults.cardColors(
-            containerColor = if (isKeptRecorded || isAddedInEdit) {
-                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.16f)
-            } else if (isRemovalPending) {
-                MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.12f)
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
+            containerColor = cardContainerColor
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         border = BorderStroke(
@@ -1677,7 +2039,10 @@ private fun ClothingCard(
         )
     ) {
         Row(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(cardContainerColor)
+                .padding(10.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -3030,6 +3395,7 @@ private fun SettingsScreenPreview() {
         SettingsScreen(
             currencyCode = "JPY",
             onCurrencySelected = {},
+            onPurgeArchivedItems = { onPurged -> onPurged(0) },
             onBack = {}
         )
     }

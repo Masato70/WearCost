@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">옷값계산기</string>
     <string name="add_short">+</string>
-    <string name="summary_title">옷장 요약</string>
     <string name="closet_title">옷장</string>
     <string name="settings">설정</string>
     <string name="currency">통화</string>
@@ -13,7 +12,6 @@
     <string name="currency_krw">한국 원 (KRW)</string>
     <string name="currency_cny">중국 위안 (CNY)</string>
     <string name="all_categories">전체</string>
-    <string name="sort_label">정렬: %1$s ▼</string>
     <string name="sort_chip_format">⇅ %1$s</string>
     <string name="sort_accessibility">정렬</string>
     <string name="sort_recently_worn">최근 입은 순</string>
@@ -26,23 +24,11 @@
     <string name="sort_purchase_price_low">구매가 낮은 순</string>
     <string name="sort_newest_created">최근 등록 순</string>
     <string name="sort_oldest_created">오래된 등록 순</string>
-    <string name="sort_before_active">아직 활약 전</string>
-    <string name="sort_cost_improvement">가성비 개선 순</string>
-    <string name="item_count_format">%1$d개</string>
-    <string name="unworn_value">아직 활약 전</string>
-    <string name="before_active">아직 활약 전</string>
-    <string name="before_active_count_format">%1$d개</string>
-    <string name="before_active_summary_format">%1$d개 · %2$s</string>
-    <string name="total_value">총액</string>
-    <string name="avg_cost">평균/회</string>
     <string name="registered_count">등록 수</string>
-    <string name="overall_cost_per_wear">전체 착용당 비용</string>
     <string name="unworn_count">미착용</string>
     <string name="closet_item_count_format">%1$d벌</string>
     <string name="unworn_purchase_value_format">%1$s 상당</string>
-    <string name="total_purchase_value_format">총 구매액 %1$s</string>
     <string name="purchase_total">총 구매액</string>
-    <string name="no_value">—</string>
     <string name="empty_title">아직 아이템이 없습니다</string>
     <string name="empty_message">자주 입는 옷 하나부터 기록해 보세요.</string>
     <string name="add_item">아이템 추가</string>
@@ -72,7 +58,6 @@
     <string name="price_unit_format">단위: %1$s</string>
     <string name="initial_wear_count">착용 횟수</string>
     <string name="purchase_date">구매일</string>
-    <string name="date_placeholder">yyyy-mm-dd</string>
     <string name="select_date">날짜 선택</string>
     <string name="optional_details">선택 항목</string>
     <string name="show_optional_details">선택 항목 입력</string>
@@ -84,8 +69,6 @@
     <string name="clear">지우기</string>
     <string name="delete_item_title">삭제할까요?</string>
     <string name="delete_item_message">이 아이템이 WearCost에서 삭제됩니다.</string>
-    <string name="increment">+1</string>
-    <string name="wore_increment">입음 +1</string>
     <string name="today_wore">오늘 입음</string>
     <string name="recorded_with_check">✓ 오늘 기록됨</string>
     <string name="wear_added">착용을 기록했습니다</string>
@@ -93,19 +76,14 @@
     <string name="duplicate_wear_title">오늘 이미 기록되었습니다</string>
     <string name="duplicate_wear_message">같은 옷을 한 번 더 기록할까요?</string>
     <string name="record_again">한 번 더 기록</string>
-    <string name="wear_count_format">%1$d회 착용</string>
     <string name="wear_count_and_purchase_format">%1$d회 착용 | 구매 %2$s</string>
     <string name="cost_per_wear_format">%1$s / 회</string>
     <string name="cost_per_wear_label">1회당</string>
     <string name="cost_per_wear_unknown">—</string>
     <string name="cost_calculated_after_wear">착용 후 계산됩니다</string>
     <string name="cost_formula_format">%1$s ÷ %2$d회</string>
-    <string name="purchase_price_format">구매 %1$s</string>
-    <string name="not_worn_yet">아직 착용 전</string>
     <string name="not_worn_yet_subtitle">아직 입지 않았습니다</string>
-    <string name="waiting_turn">차례를 기다리는 중</string>
     <string name="first_wear_cost_format">오늘 입으면 1회당 %1$s</string>
-    <string name="last_worn_inline_format">마지막 착용: %1$s</string>
     <string name="category_and_last_worn_format">%1$s · %2$s 착용</string>
     <string name="category_and_status_format">%1$s · %2$s</string>
     <string name="last_worn_today">오늘</string>
@@ -121,7 +99,6 @@
     <string name="today_record_exists">오늘 기록이 있습니다</string>
     <string name="today_recorded_count_format">오늘 %1$d개 기록됨</string>
     <string name="today_record_add_hint">필요하면 추가로 기록할 수 있습니다</string>
-    <string name="add_more_today_record">추가</string>
     <string name="edit_today_record">편집</string>
     <string name="start_today_outfit_record">오늘 코디 기록</string>
     <string name="selection_mode_title">오늘 입은 옷 선택</string>
@@ -129,17 +106,10 @@
     <string name="selection_mode_edit_subtitle">추가하거나 취소할 수 있습니다</string>
     <string name="selected_count_format">%1$d개 선택 중</string>
     <string name="today_outfit_count_format">오늘 코디 %1$d개</string>
-    <string name="select_clothes_prompt">옷을 선택해 주세요</string>
-    <string name="select_additional_clothes_prompt">추가할 옷을 선택해 주세요</string>
-    <string name="record_selected_count_format">%1$d개 기록</string>
-    <string name="record_added_count_format">추가한 %1$d개 기록</string>
-    <string name="today_outfit_and_added_count_format">오늘 코디 %1$d개 · 새로 추가 %2$d개</string>
     <string name="recording">기록 중</string>
-    <string name="selected">선택됨</string>
     <string name="already_recorded_label">기록됨</string>
     <string name="add_pending_label">추가 예정</string>
     <string name="remove_pending_label">취소 예정</string>
-    <string name="tap_to_select">카드를 탭해 선택</string>
     <string name="today_outfit_no_changes">변경 사항이 없습니다</string>
     <string name="today_outfit_add_summary_format">%1$d개 추가합니다</string>
     <string name="today_outfit_remove_summary_format">%1$d개 취소합니다</string>
@@ -178,4 +148,22 @@
     <string name="category_bag_short">가</string>
     <string name="category_accessory_short">소</string>
     <string name="category_other_short">기</string>
+    <string name="nav_closet">옷장</string>
+    <string name="nav_history">착용 기록</string>
+    <string name="wear_history_title">착용 기록</string>
+    <string name="wear_history_empty_title">착용 기록이 없습니다</string>
+    <string name="wear_history_empty_message">오늘의 코디를 기록하면 날짜별로 여기에 표시됩니다.</string>
+    <string name="history_item_count_format">%1$d개</string>
+    <string name="history_today">오늘</string>
+    <string name="history_yesterday">어제</string>
+    <string name="delete_history_entry_title">이 착용 기록을 삭제할까요?</string>
+    <string name="delete_history_entry_message">%2$s에 기록한 %1$s을(를) 삭제합니다. 착용 횟수도 기록 수만큼 줄어듭니다.</string>
+    <string name="purge_deleted_clothes_history">삭제한 옷을 기록에서 제거</string>
+    <string name="purge_deleted_clothes_history_summary">옷장에서 이미 삭제한 옷과 해당 착용 기록만 완전히 삭제합니다.</string>
+    <string name="purge_deleted_clothes_history_title">삭제한 옷을 기록에서 제거할까요?</string>
+    <string name="purge_deleted_clothes_history_message">삭제한 옷과 모든 착용 기록은 복원할 수 없습니다. 현재 옷장에 있는 옷에는 영향을 주지 않습니다.</string>
+    <string name="purge_deleted_clothes_history_empty">삭제할 착용 기록이 없습니다</string>
+    <plurals name="purge_deleted_clothes_history_completed">
+        <item quantity="other">착용 기록 %1$d개를 삭제했습니다</item>
+    </plurals>
 </resources>

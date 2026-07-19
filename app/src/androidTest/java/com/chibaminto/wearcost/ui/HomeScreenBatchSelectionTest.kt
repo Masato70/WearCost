@@ -52,6 +52,8 @@ class HomeScreenBatchSelectionTest {
         setHomeContent(items = testItems())
 
         composeRule.onNodeWithTag(WearCostTestTags.StartBatchRecord).performClick()
+        composeRule.onNodeWithTag(WearCostTestTags.SelectionBack).assertIsDisplayed()
+        composeRule.waitForIdle()
         composeRule.runOnUiThread {
             composeRule.activity.onBackPressedDispatcher.onBackPressed()
         }

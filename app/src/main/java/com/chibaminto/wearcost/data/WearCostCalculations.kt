@@ -99,6 +99,19 @@ fun epochDayFromMillis(
     return Math.floorDiv(calendar.timeInMillis, DAY_MILLIS)
 }
 
+/** Returns a stable daytime instant that formats back to the local date represented by [epochDay]. */
+fun displayMillisFromEpochDay(
+    epochDay: Long,
+    timeZone: TimeZone = TimeZone.getDefault()
+): Long {
+    var candidateMillis = epochDay * DAY_MILLIS + DAY_MILLIS / 2
+    repeat(2) {
+        val candidateEpochDay = epochDayFromMillis(candidateMillis, timeZone)
+        candidateMillis += (epochDay - candidateEpochDay) * DAY_MILLIS
+    }
+    return candidateMillis
+}
+
 fun lastWornEpochDay(item: ClothingEntity): Long? =
     item.lastWornDateEpochDay
 

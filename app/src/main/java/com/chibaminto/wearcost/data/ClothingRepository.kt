@@ -9,6 +9,7 @@ class ClothingRepository(
     private val dao: ClothingDao
 ) {
     val items: Flow<List<ClothingEntity>> = dao.observeItems()
+    val wearHistory: Flow<List<WearHistoryEntry>> = dao.observeWearHistory()
     val customCategories: Flow<List<CustomCategoryEntity>> = dao.observeCustomCategories()
     private val wearMutexes = mutableMapOf<Long, Mutex>()
 
@@ -22,8 +23,16 @@ class ClothingRepository(
     }
 
     suspend fun delete(item: ClothingEntity) {
-        dao.delete(item)
+        dao.archiveItem(item.id)
     }
+
+    suspend fun deleteWearHistoryEntry(clothingId: Long, wornDateEpochDay: Long) {
+        mutexFor(clothingId).withLock {
+            dao.deleteWearHistoryEntry(clothingId, wornDateEpochDay)
+        }
+    }
+
+    suspend fun purgeArchivedItems(): Int = dao.purgeArchivedItems()
 
     suspend fun recordWear(id: Long, wornDateEpochDay: Long): WearRecordSnapshot? =
         mutexFor(id).withLock {
@@ -49,10 +58,6 @@ class ClothingRepository(
                 onFailure = { BatchWearRecordResult.MissingItems }
             )
         }
-    }
-
-    suspend fun decrementWearCount(id: Long) {
-        dao.decrementWearCount(id)
     }
 
     suspend fun restoreWearSnapshot(snapshot: WearRecordSnapshot): List<Long> =

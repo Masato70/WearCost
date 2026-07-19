@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">WearCost</string>
     <string name="add_short">+</string>
-    <string name="summary_title">Closet summary</string>
     <string name="closet_title">Closet</string>
     <string name="settings">Settings</string>
     <string name="currency">Currency</string>
@@ -13,7 +12,6 @@
     <string name="currency_krw">Korean won (KRW)</string>
     <string name="currency_cny">Chinese yuan (CNY)</string>
     <string name="all_categories">All</string>
-    <string name="sort_label">Sort: %1$s</string>
     <string name="sort_chip_format">⇅ %1$s</string>
     <string name="sort_accessibility">Sort</string>
     <string name="sort_recently_worn">Recently worn</string>
@@ -26,23 +24,11 @@
     <string name="sort_purchase_price_low">Purchase price low</string>
     <string name="sort_newest_created">Newest added</string>
     <string name="sort_oldest_created">Oldest added</string>
-    <string name="sort_before_active">Before active</string>
-    <string name="sort_cost_improvement">Cost improvement</string>
-    <string name="item_count_format">%1$d items</string>
-    <string name="unworn_value">Before active</string>
-    <string name="before_active">Before active</string>
-    <string name="before_active_count_format">%1$d items</string>
-    <string name="before_active_summary_format">%1$d items · %2$s</string>
-    <string name="total_value">Total</string>
-    <string name="avg_cost">Avg / wear</string>
     <string name="registered_count">Registered</string>
-    <string name="overall_cost_per_wear">Overall cost / wear</string>
     <string name="unworn_count">Unworn</string>
     <string name="closet_item_count_format">%1$d items</string>
     <string name="unworn_purchase_value_format">%1$s worth</string>
-    <string name="total_purchase_value_format">Total purchases %1$s</string>
     <string name="purchase_total">Total purchases</string>
-    <string name="no_value">—</string>
     <string name="empty_title">No items yet</string>
     <string name="empty_message">Start with one piece you wear often.</string>
     <string name="add_item">Add item</string>
@@ -72,7 +58,6 @@
     <string name="price_unit_format">Unit: %1$s</string>
     <string name="initial_wear_count">Wear count</string>
     <string name="purchase_date">Purchase date</string>
-    <string name="date_placeholder">yyyy-mm-dd</string>
     <string name="select_date">Select date</string>
     <string name="optional_details">Optional details</string>
     <string name="show_optional_details">Add optional details</string>
@@ -84,8 +69,6 @@
     <string name="clear">Clear</string>
     <string name="delete_item_title">Delete item?</string>
     <string name="delete_item_message">This item will be removed from WearCost.</string>
-    <string name="increment">+1</string>
-    <string name="wore_increment">Wore +1</string>
     <string name="today_wore">Wore today</string>
     <string name="recorded_with_check">✓ Recorded today</string>
     <string name="wear_added">Wear recorded</string>
@@ -93,19 +76,14 @@
     <string name="duplicate_wear_title">Already recorded today</string>
     <string name="duplicate_wear_message">Record this same item one more time?</string>
     <string name="record_again">Record again</string>
-    <string name="wear_count_format">%1$d wears</string>
     <string name="wear_count_and_purchase_format">%1$d wears | Bought %2$s</string>
     <string name="cost_per_wear_format">%1$s / wear</string>
     <string name="cost_per_wear_label">Per wear</string>
     <string name="cost_per_wear_unknown">—</string>
     <string name="cost_calculated_after_wear">Calculated after wearing</string>
     <string name="cost_formula_format">%1$s ÷ %2$d wears</string>
-    <string name="purchase_price_format">Bought %1$s</string>
-    <string name="not_worn_yet">Not worn yet</string>
     <string name="not_worn_yet_subtitle">Not worn yet</string>
-    <string name="waiting_turn">Waiting for its turn</string>
     <string name="first_wear_cost_format">First wear makes it %1$s/wear</string>
-    <string name="last_worn_inline_format">Last worn: %1$s</string>
     <string name="category_and_last_worn_format">%1$s · %2$s</string>
     <string name="category_and_status_format">%1$s · %2$s</string>
     <string name="last_worn_today">Today</string>
@@ -121,7 +99,6 @@
     <string name="today_record_exists">You have a wear record today.</string>
     <string name="today_recorded_count_format">%1$d recorded today</string>
     <string name="today_record_add_hint">Add another item if needed</string>
-    <string name="add_more_today_record">Add</string>
     <string name="edit_today_record">Edit</string>
     <string name="start_today_outfit_record">Record today’s outfit</string>
     <string name="selection_mode_title">Select clothes worn today</string>
@@ -129,17 +106,10 @@
     <string name="selection_mode_edit_subtitle">You can add or remove items</string>
     <string name="selected_count_format">%1$d selected</string>
     <string name="today_outfit_count_format">Today’s outfit %1$d</string>
-    <string name="select_clothes_prompt">Select clothes</string>
-    <string name="select_additional_clothes_prompt">Select clothes to add</string>
-    <string name="record_selected_count_format">Record %1$d</string>
-    <string name="record_added_count_format">Record added %1$d</string>
-    <string name="today_outfit_and_added_count_format">Today’s outfit %1$d · Added %2$d</string>
     <string name="recording">Recording</string>
-    <string name="selected">Selected</string>
     <string name="already_recorded_label">Recorded</string>
     <string name="add_pending_label">To add</string>
     <string name="remove_pending_label">To remove</string>
-    <string name="tap_to_select">Tap card to select</string>
     <string name="today_outfit_no_changes">No changes</string>
     <string name="today_outfit_add_summary_format">Add %1$d</string>
     <string name="today_outfit_remove_summary_format">Remove %1$d</string>
@@ -178,4 +148,23 @@
     <string name="category_bag_short">BAG</string>
     <string name="category_accessory_short">ACC</string>
     <string name="category_other_short">OTH</string>
+    <string name="nav_closet">Closet</string>
+    <string name="nav_history">History</string>
+    <string name="wear_history_title">Wear history</string>
+    <string name="wear_history_empty_title">No wear history yet</string>
+    <string name="wear_history_empty_message">Recorded outfits will appear here by date.</string>
+    <string name="history_item_count_format">%1$d item(s)</string>
+    <string name="history_today">Today</string>
+    <string name="history_yesterday">Yesterday</string>
+    <string name="delete_history_entry_title">Delete this wear record?</string>
+    <string name="delete_history_entry_message">Delete %1$s from the outfit recorded on %2$s? The wear count will also be reduced.</string>
+    <string name="purge_deleted_clothes_history">Remove deleted clothes from history</string>
+    <string name="purge_deleted_clothes_history_summary">Permanently remove only clothes already deleted from the closet and their wear history.</string>
+    <string name="purge_deleted_clothes_history_title">Remove deleted clothes from history?</string>
+    <string name="purge_deleted_clothes_history_message">Deleted clothes and all of their wear history will be permanently removed. Clothes still in your closet will not be affected.</string>
+    <string name="purge_deleted_clothes_history_empty">There was no wear history to remove</string>
+    <plurals name="purge_deleted_clothes_history_completed">
+        <item quantity="one">Removed %1$d wear history entry</item>
+        <item quantity="other">Removed %1$d wear history entries</item>
+    </plurals>
 </resources>

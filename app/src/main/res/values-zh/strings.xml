@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">衣物性价比</string>
     <string name="add_short">+</string>
-    <string name="summary_title">衣橱汇总</string>
     <string name="closet_title">衣橱</string>
     <string name="settings">设置</string>
     <string name="currency">货币</string>
@@ -13,7 +12,6 @@
     <string name="currency_krw">韩元（KRW）</string>
     <string name="currency_cny">人民币（CNY）</string>
     <string name="all_categories">全部</string>
-    <string name="sort_label">排序：%1$s ▼</string>
     <string name="sort_chip_format">⇅ %1$s</string>
     <string name="sort_accessibility">排序</string>
     <string name="sort_recently_worn">最近穿过</string>
@@ -26,23 +24,11 @@
     <string name="sort_purchase_price_low">购买价低到高</string>
     <string name="sort_newest_created">最新添加</string>
     <string name="sort_oldest_created">最早添加</string>
-    <string name="sort_before_active">待发挥</string>
-    <string name="sort_cost_improvement">性价比改善</string>
-    <string name="item_count_format">%1$d件</string>
-    <string name="unworn_value">待发挥</string>
-    <string name="before_active">待发挥</string>
-    <string name="before_active_count_format">%1$d件</string>
-    <string name="before_active_summary_format">%1$d件 · %2$s</string>
-    <string name="total_value">总额</string>
-    <string name="avg_cost">平均/次</string>
     <string name="registered_count">登记数</string>
-    <string name="overall_cost_per_wear">整体每次穿着成本</string>
     <string name="unworn_count">未穿</string>
     <string name="closet_item_count_format">%1$d件</string>
     <string name="unworn_purchase_value_format">价值%1$s</string>
-    <string name="total_purchase_value_format">购买总额 %1$s</string>
     <string name="purchase_total">购买总额</string>
-    <string name="no_value">—</string>
     <string name="empty_title">还没有衣物</string>
     <string name="empty_message">先从一件常穿的衣服开始记录吧。</string>
     <string name="add_item">添加衣物</string>
@@ -72,7 +58,6 @@
     <string name="price_unit_format">单位：%1$s</string>
     <string name="initial_wear_count">穿着次数</string>
     <string name="purchase_date">购买日期</string>
-    <string name="date_placeholder">yyyy-mm-dd</string>
     <string name="select_date">选择日期</string>
     <string name="optional_details">可选项目</string>
     <string name="show_optional_details">填写可选项目</string>
@@ -84,8 +69,6 @@
     <string name="clear">清除</string>
     <string name="delete_item_title">删除衣物？</string>
     <string name="delete_item_message">此衣物将从 WearCost 中删除。</string>
-    <string name="increment">+1</string>
-    <string name="wore_increment">穿了 +1</string>
     <string name="today_wore">今天穿了</string>
     <string name="recorded_with_check">✓ 今日已记录</string>
     <string name="wear_added">已记录穿着</string>
@@ -93,19 +76,14 @@
     <string name="duplicate_wear_title">今天已经记录过</string>
     <string name="duplicate_wear_message">要再记录一次同一件衣物吗？</string>
     <string name="record_again">再记录一次</string>
-    <string name="wear_count_format">穿了%1$d次</string>
     <string name="wear_count_and_purchase_format">穿了%1$d次 | 购买 %2$s</string>
     <string name="cost_per_wear_format">%1$s / 次</string>
     <string name="cost_per_wear_label">每次</string>
     <string name="cost_per_wear_unknown">—</string>
     <string name="cost_calculated_after_wear">穿着后计算</string>
     <string name="cost_formula_format">%1$s ÷ %2$d次</string>
-    <string name="purchase_price_format">购买 %1$s</string>
-    <string name="not_worn_yet">还未穿过</string>
     <string name="not_worn_yet_subtitle">还没有穿过</string>
-    <string name="waiting_turn">等待出场</string>
     <string name="first_wear_cost_format">今天穿的话每次 %1$s</string>
-    <string name="last_worn_inline_format">最后穿着：%1$s</string>
     <string name="category_and_last_worn_format">%1$s · %2$s穿着</string>
     <string name="category_and_status_format">%1$s · %2$s</string>
     <string name="last_worn_today">今天</string>
@@ -121,7 +99,6 @@
     <string name="today_record_exists">今天已有记录</string>
     <string name="today_recorded_count_format">今天已记录%1$d件</string>
     <string name="today_record_add_hint">需要时可以继续添加</string>
-    <string name="add_more_today_record">添加</string>
     <string name="edit_today_record">编辑</string>
     <string name="start_today_outfit_record">记录今天的搭配</string>
     <string name="selection_mode_title">选择今天穿的衣物</string>
@@ -129,17 +106,10 @@
     <string name="selection_mode_edit_subtitle">可以添加或取消</string>
     <string name="selected_count_format">已选择%1$d件</string>
     <string name="today_outfit_count_format">今天搭配%1$d件</string>
-    <string name="select_clothes_prompt">请选择衣物</string>
-    <string name="select_additional_clothes_prompt">请选择要添加的衣物</string>
-    <string name="record_selected_count_format">记录%1$d件</string>
-    <string name="record_added_count_format">记录新增%1$d件</string>
-    <string name="today_outfit_and_added_count_format">今天搭配%1$d件 · 新增%2$d件</string>
     <string name="recording">记录中</string>
-    <string name="selected">已选择</string>
     <string name="already_recorded_label">已记录</string>
     <string name="add_pending_label">待添加</string>
     <string name="remove_pending_label">待取消</string>
-    <string name="tap_to_select">点按卡片选择</string>
     <string name="today_outfit_no_changes">没有更改</string>
     <string name="today_outfit_add_summary_format">将添加%1$d件</string>
     <string name="today_outfit_remove_summary_format">将取消%1$d件</string>
@@ -178,4 +148,22 @@
     <string name="category_bag_short">包</string>
     <string name="category_accessory_short">小</string>
     <string name="category_other_short">他</string>
+    <string name="nav_closet">衣橱</string>
+    <string name="nav_history">穿着记录</string>
+    <string name="wear_history_title">穿着记录</string>
+    <string name="wear_history_empty_title">暂无穿着记录</string>
+    <string name="wear_history_empty_message">记录今日穿搭后，将按日期显示在这里。</string>
+    <string name="history_item_count_format">%1$d件</string>
+    <string name="history_today">今天</string>
+    <string name="history_yesterday">昨天</string>
+    <string name="delete_history_entry_title">删除这条穿着记录？</string>
+    <string name="delete_history_entry_message">删除%2$s记录的“%1$s”。穿着次数也会相应减少。</string>
+    <string name="purge_deleted_clothes_history">从记录中清除已删除衣物</string>
+    <string name="purge_deleted_clothes_history_summary">仅永久删除已从衣橱中移除的衣物及其穿着记录。</string>
+    <string name="purge_deleted_clothes_history_title">从记录中清除已删除衣物？</string>
+    <string name="purge_deleted_clothes_history_message">已删除衣物及其全部穿着记录将无法恢复。当前衣橱中的衣物不受影响。</string>
+    <string name="purge_deleted_clothes_history_empty">没有可删除的穿着记录</string>
+    <plurals name="purge_deleted_clothes_history_completed">
+        <item quantity="other">已删除%1$d条穿着记录</item>
+    </plurals>
 </resources>

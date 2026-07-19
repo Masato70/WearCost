@@ -10,6 +10,40 @@ import java.util.TimeZone
 
 class WearCostCalculationsTest {
     @Test
+    fun displayMillisFromEpochDay_restoresTokyoLocalDateWithoutPreviousDayShift() {
+        val timeZone = TimeZone.getTimeZone("Asia/Tokyo")
+        val original = Calendar.getInstance(timeZone).apply {
+            clear()
+            set(2026, Calendar.JULY, 19, 0, 0, 0)
+        }
+        val epochDay = epochDayFromMillis(original.timeInMillis, timeZone)
+        val restored = Calendar.getInstance(timeZone).apply {
+            timeInMillis = displayMillisFromEpochDay(epochDay, timeZone)
+        }
+
+        assertEquals(2026, restored.get(Calendar.YEAR))
+        assertEquals(Calendar.JULY, restored.get(Calendar.MONTH))
+        assertEquals(19, restored.get(Calendar.DAY_OF_MONTH))
+    }
+
+    @Test
+    fun displayMillisFromEpochDay_restoresNegativeOffsetLocalDate() {
+        val timeZone = TimeZone.getTimeZone("America/Los_Angeles")
+        val original = Calendar.getInstance(timeZone).apply {
+            clear()
+            set(2026, Calendar.JULY, 19, 0, 0, 0)
+        }
+        val epochDay = epochDayFromMillis(original.timeInMillis, timeZone)
+        val restored = Calendar.getInstance(timeZone).apply {
+            timeInMillis = displayMillisFromEpochDay(epochDay, timeZone)
+        }
+
+        assertEquals(2026, restored.get(Calendar.YEAR))
+        assertEquals(Calendar.JULY, restored.get(Calendar.MONTH))
+        assertEquals(19, restored.get(Calendar.DAY_OF_MONTH))
+    }
+
+    @Test
     fun costPerWear_returnsRoundedCostWhenWorn() {
         assertEquals(2500, costPerWear(purchasePrice = 5000, wearCount = 2))
     }
